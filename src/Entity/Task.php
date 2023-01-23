@@ -6,6 +6,7 @@ use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -28,14 +29,20 @@ class Task
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $done;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "tasks")]
+    #[ORM\JoinColumn(referencedColumnName: "id", nullable: false)]
+    private User $user;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function toggle(bool $flag) : void
+    public function toggle(bool $flag) : self
     {
         $this->done = $flag;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
@@ -43,9 +50,11 @@ class Task
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getTitle(): string
@@ -53,9 +62,11 @@ class Task
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getContent(): string
@@ -63,13 +74,26 @@ class Task
         return $this->content;
     }
 
-    public function setContent(string $content): void
+    public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
     }
 
     public function isDone(): bool
     {
         return $this->done;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): Task
+    {
+        $this->user = $user;
+        return $this;
     }
 }

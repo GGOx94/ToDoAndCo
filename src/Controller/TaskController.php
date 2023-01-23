@@ -36,11 +36,12 @@ class TaskController extends AbstractController
         {
             $task->setCreatedAt(new \DateTimeImmutable());
             $task->toggle(false);
+            $task->setUser($this->getUser());
 
             $this->em->persist($task);
             $this->em->flush();
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->addFlash('success', 'Votre tâche a été bien été ajoutée.');
 
             return $this->redirectToRoute('task_list');
         }
@@ -75,7 +76,10 @@ class TaskController extends AbstractController
         $task->toggle(!$task->isDone());
         $this->em->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $this->addFlash('success',
+            sprintf('La tâche %s a bien été marquée comme %s.',
+            $task->getTitle(), $task->isDone() ? "faite" : "non terminée")
+        );
 
         return $this->redirectToRoute('task_list');
     }
