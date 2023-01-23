@@ -3,34 +3,62 @@
 {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
 
 {% block body %}
-    <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('task_create') }}" class="btn btn-info">Créer une tâche</a>
+    {% endif %}
     <div class="row">
-        {% for task in tasks %}
-        <div class="col-sm-4 col-lg-4 col-md-4">
-            <div class="thumbnail">
-                <div class="caption">
-                    <h4 class="pull-right">
-                        {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
-                    </h4>
-                    <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
-                    <p>{{ task.content }}</p>
-                </div>
-                <div>
-                    <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                        <button class="btn btn-success btn-sm pull-right">
-                            {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-                        </button>
-                    </form>
-                    <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                        <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        {% else %}
+
+        {% if tasks is empty %}
             <div class="alert alert-warning" role="alert">
-                Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+                Il n'y a pas encore de tâche enregistrée.
+                {% if not is_granted('ROLE_USER') %}
+                    <a href="{{ path('login') }}" class="btn btn-warning pull-right">Se connecter pour créer une tâche</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% for task in tasks %}
+
+            {% set taskTitle = task.title ~ ' - ' ~ task.user.username %}
+
+            <div class="col-sm-4 col-lg-4 col-md-4 align-items-center">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h4 class="pull-right">
+                            {% if task.isDone %}
+                                <span class="glyphicon glyphicon-ok"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-remove"></span>
+                            {% endif %}
+                        </h4>
+                        <h4>
+
+                            {% if task.user == app.user %}
+                                <a href="{{ path('task_edit', {'id' : task.id }) }}">{{ taskTitle }}</a>
+                            {% else %}
+                                {{ taskTitle }}
+                            {% endif %}
+                        </h4>
+                        <p>{{ task.content|nl2br }}</p>
+                    </div>
+
+                    <div>
+                        {# Allow user of the task to toggle its status or remove it #}
+                        {% if task.user == app.user %}
+                        <form action="{{ path('task_toggle', {'id' : task.id }) }}">
+                            <button class="btn btn-success btn-sm pull-right">
+                                {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                            </button>
+                        </form>
+                        <form action="{{ path('task_delete', {'id' : task.id }) }}">
+                            <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                        </form>
+                        {% endif %}
+                    </div>
+
+                </div>
             </div>
         {% endfor %}
+
     </div>
 {% endblock %}

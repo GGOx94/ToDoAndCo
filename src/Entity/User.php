@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -26,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /** @var string The hashed password */
     #[ORM\Column(type: Types::STRING, length: 64)]
     private string $password;
+
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: Task::class)]
+    private Collection $tasks;
 
     public function getId(): ?int
     {
@@ -83,19 +87,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return string|null
-     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * @param string|null $username
-     */
-    public function setUsername(?string $username): void
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function setTasks(Collection $tasks): self
+    {
+        $this->tasks = $tasks;
+
+        return $this;
+    }
+
+    public function addTask(Task $task) : self
+    {
+        if(!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+        }
+
+        return $this;
     }
 }
