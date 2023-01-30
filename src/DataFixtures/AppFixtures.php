@@ -12,6 +12,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private const FIXT_PASSWORD = "Secret123";
+
     public function __construct(
         private readonly UserPasswordHasherInterface $hasher
     ) {}
@@ -24,7 +26,7 @@ class AppFixtures extends Fixture
         $admin
             ->setEmail("admin@demo.oc")
             ->setUsername("admin")
-            ->setPassword($this->hasher->hashPassword($admin, "Secret123"))
+            ->setPassword($this->hasher->hashPassword($admin, self::FIXT_PASSWORD))
             ->setRoles(["ROLE_ADMIN"]);
 
         $manager->persist($admin);
@@ -34,7 +36,7 @@ class AppFixtures extends Fixture
         $anon
             ->setEmail("anon@demo.oc")
             ->setUsername("Anonyme")
-            ->setPassword($this->hasher->hashPassword($admin, "Secret123"));
+            ->setPassword($this->hasher->hashPassword($admin, self::FIXT_PASSWORD));
 
         $manager->persist($anon);
 
@@ -46,7 +48,7 @@ class AppFixtures extends Fixture
             $user
                 ->setUsername("user".$i)
                 ->setEmail("user".$i."@demo.oc")
-                ->setPassword($this->hasher->hashPassword($user,"Secret123"));
+                ->setPassword($this->hasher->hashPassword($user,self::FIXT_PASSWORD));
 
             $users[] = $user;
 

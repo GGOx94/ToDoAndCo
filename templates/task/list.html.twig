@@ -20,6 +20,7 @@
         {% for task in tasks %}
 
             {% set taskTitle = task.title ~ ' - ' ~ task.user.username %}
+            {% set isAnonTask = task.user.username is same as("Anonyme") %}
 
             <div class="col-sm-4 col-lg-4 col-md-4 align-items-center">
                 <div class="thumbnail">
@@ -43,16 +44,20 @@
                     </div>
 
                     <div>
-                        {# Allow user of the task to toggle its status or remove it #}
+                        {# Allow author of the task to toggle its status #}
                         {% if task.user == app.user %}
-                        <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                            <button class="btn btn-success btn-sm pull-right">
-                                {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
-                            </button>
-                        </form>
-                        <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                            <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
-                        </form>
+                            <form action="{{ path('task_toggle', {'id' : task.id }) }}">
+                                <button class="btn btn-success btn-sm pull-right">
+                                    {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {# Allow author of the task to remove it, or allow admins to remove anonymous tasks #}
+                        {% if task.user == app.user or isAnonTask and is_granted('ROLE_ADMIN') %}
+                            <form action="{{ path('task_delete', {'id' : task.id }) }}">
+                                <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                            </form>
                         {% endif %}
                     </div>
 
