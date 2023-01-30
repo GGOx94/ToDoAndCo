@@ -7,6 +7,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -35,9 +36,14 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $password = $this->hasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
+
+            if($form["is_admin"]->getData() === true) {
+                $user->setRoles(["ROLE_ADMIN"]);
+            }
 
             $this->em->persist($user);
             $this->em->flush();
@@ -53,13 +59,19 @@ class UserController extends AbstractController
     #[Route("/users/{id}/edit", name:"user_edit")]
     public function editUser(User $user, Request $request) : Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_admin_checked' => in_array('ROLE_ADMIN', $user->getRoles())
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->hasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
+
+            if($form["is_admin"]->getData() === true) {
+                $user->setRoles(["ROLE_ADMIN"]);
+            }
 
             $this->em->flush();
 
