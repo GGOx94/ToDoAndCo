@@ -81,6 +81,13 @@ class Task
         return $this;
     }
 
+    // Used by fixtures tests
+    public function setDone(bool $done): self
+    {
+        $this->done = $done;
+        return $this;
+    }
+
     public function isDone(): bool
     {
         return $this->done;
@@ -94,6 +101,7 @@ class Task
     public function setUser(User $user): Task
     {
         $this->user = $user;
+        $user->addTask($this);
         return $this;
     }
 }

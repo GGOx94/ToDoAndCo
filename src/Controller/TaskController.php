@@ -41,7 +41,7 @@ class TaskController extends AbstractController
             $this->em->persist($task);
             $this->em->flush();
 
-            $this->addFlash('success', 'Votre tâche a été bien été ajoutée.');
+            $this->addFlash('success', 'Votre tâche a bien été ajoutée.');
 
             return $this->redirectToRoute('task_list');
         }
