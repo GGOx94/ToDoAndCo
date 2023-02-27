@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,6 +31,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: "user", targetEntity: Task::class)]
     private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,12 +110,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tasks;
     }
 
-    public function setTasks(Collection $tasks): self
-    {
-        $this->tasks = $tasks;
-
-        return $this;
-    }
+//    public function setTasks(Collection|array $tasks): self
+//    {
+//        if($tasks instanceof Collection) {
+//            $this->tasks = $tasks;
+//        }
+//        else {
+//            $this->tasks = new ArrayCollection($tasks);
+//        }
+//
+//        return $this;
+//    }
 
     public function addTask(Task $task) : self
     {
