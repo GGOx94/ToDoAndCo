@@ -10,7 +10,7 @@
 
         {% if tasks is empty %}
             <div class="alert alert-warning" role="alert">
-                Il n'y a pas encore de tâche enregistrée.
+                Il n'y a pas de tâche dans cette liste.
                 {% if not is_granted('ROLE_USER') %}
                     <a href="{{ path('login') }}" class="btn btn-warning pull-right">Se connecter pour créer une tâche</a>
                 {% endif %}
@@ -18,11 +18,10 @@
         {% endif %}
 
         {% for task in tasks %}
+            {% set taskTitle = (task.user.username ~ ' - ' ~ task.title)|u.truncate(35, '...') %}
+            {% set isAnonTask = task.user.username is same as("anonyme") %}
 
-            {% set taskTitle = task.title ~ ' - ' ~ task.user.username %}
-            {% set isAnonTask = task.user.username is same as("Anonyme") %}
-
-            <div class="col-sm-4 col-lg-4 col-md-4 align-items-center">
+            <div class="col-sm-4 col-lg-4 col-md-4">
                 <div class="thumbnail">
                     <div class="caption">
                         <h4 class="pull-right">
@@ -33,21 +32,20 @@
                             {% endif %}
                         </h4>
                         <h4>
-
                             {% if task.user == app.user %}
                                 <a href="{{ path('task_edit', {'id' : task.id }) }}">{{ taskTitle }}</a>
                             {% else %}
                                 {{ taskTitle }}
                             {% endif %}
                         </h4>
-                        <p>{{ task.content|nl2br }}</p>
+                        <p>{{ task.content|nl2br|u.truncate(200, '...') }}</p>
                     </div>
 
-                    <div>
+                    <div class="task-buttons">
                         {# Allow author of the task to toggle its status #}
                         {% if task.user == app.user %}
                             <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                                <button class="btn btn-success btn-sm pull-right">
+                                <button class="btn btn-success btn-sm">
                                     {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
                                 </button>
                             </form>
@@ -56,7 +54,7 @@
                         {# Allow author of the task to remove it, or allow admins to remove anonymous tasks #}
                         {% if task.user == app.user or isAnonTask and is_granted('ROLE_ADMIN') %}
                             <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                                <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                                <button class="btn btn-danger btn-sm">Supprimer</button>
                             </form>
                         {% endif %}
                     </div>

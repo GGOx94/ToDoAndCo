@@ -4,6 +4,10 @@ App\Entity\User:
     email: "admin@demo.oc"
     password: <hashPassword("Secret123")>
     roles: ["ROLE_ADMIN"]
+  user_anon:
+    username (unique): "anonyme"
+    email (unique): "anon@demo.oc"
+    password: <hashPassword("Secret123")>
   user_1:
     username (unique): "user1"
     email (unique): "user1@demo.oc"
@@ -14,21 +18,9 @@ App\Entity\User:
     password: <hashPassword("Secret123")>
 
 App\Entity\Task:
-  task{1..3}:
+  task{1..50}:
     created_at: <immutableDateTimeBetween()>
     title: <sentence(3)>
-    content: <text(80)>
-    done: <boolean()>
-    user: '@user_admin'
-  task{4..7}:
-    created_at: <immutableDateTimeBetween()>
-    title: <sentence(3)>
-    content: <text(80)>
-    done: <boolean()>
-    user: '@user_1'
-  task{8..30}:
-    created_at: <immutableDateTimeBetween()>
-    title: <sentence(3)>
-    content: <text(80)>
+    content: <text(120,250)>
     done: <boolean()>
     user: '@user_*'

@@ -22,7 +22,7 @@ body {
 }
 
 .caption {
-    height: 130px;
+    height: 150px;
     overflow: hidden;
 }
 
@@ -51,4 +51,11 @@ body {
 
 footer {
     margin: 50px 0;
+}
+
+.task-buttons {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    min-height: 30px;
 }
