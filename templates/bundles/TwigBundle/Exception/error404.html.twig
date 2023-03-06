@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-center mt-5 mb-4">Page introuvable</h1>
+
+    <div class="d-flex justify-content-center">
+        <p class="text-center">
+            La page demandée n'existe pas ou a été supprimée.<br/>
+            Vérifiez l'URL ou <a href="{{ path('app_home') }}">retournez à l'accueil</a>.
+        </p>
+    </div>
+{% endblock %}
