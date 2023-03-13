@@ -18,7 +18,7 @@
         {% endif %}
 
         {% for task in tasks %}
-            {% set taskTitle = (task.user.username ~ ' - ' ~ task.title)|u.truncate(35, '...') %}
+            {% set taskTitle = task.user.username ~ ' - ' ~ task.title %}
             {% set isAnonTask = task.user.username is same as("anonyme") %}
 
             <div class="col-sm-4 col-lg-4 col-md-4">
@@ -38,7 +38,7 @@
                                 {{ taskTitle }}
                             {% endif %}
                         </h4>
-                        <p>{{ task.content|nl2br|u.truncate(200, '...') }}</p>
+                        <p>{{ task.content|nl2br|u.truncate(150, '...') }}</p>
                     </div>
 
                     <div class="task-buttons">
