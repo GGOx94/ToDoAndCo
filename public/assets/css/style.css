@@ -5,44 +5,41 @@
  */
 
 body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+  padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 }
 
 .slide-image {
-    width: 100%;
+  width: 100%;
 }
 
 .carousel-holder {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .carousel-control,
 .item {
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 .caption {
-    height: 150px;
-}
-
-.caption h4 {
+  height: 150px;
 }
 
 .thumbnail img {
-    width: 100%;
+  width: 100%;
 }
 
 .thumbnail {
-    padding: 0;
+  padding: 0;
 }
 
 footer {
-    margin: 50px 0;
+  margin: 50px 0;
 }
 
 .task-buttons {
-    display: flex;
-    justify-content: end;
-    align-items: end;
-    min-height: 30px;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  min-height: 30px;
 }
