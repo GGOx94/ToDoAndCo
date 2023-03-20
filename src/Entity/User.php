@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ("username"), message: "Ce nom d'utilisateur est déjà utilisé.")]
+#[UniqueEntity(fields: ('username'), message: "Ce nom d'utilisateur est déjà utilisé.")]
 #[UniqueEntity(fields: ('email'), message: 'Cet email est déjà utilisé.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -32,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 64)]
     private string $password;
 
-    #[ORM\OneToMany(mappedBy: "user", targetEntity: Task::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
     private Collection $tasks;
 
     public function __construct()
@@ -125,9 +125,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 //        return $this;
 //    }
 
-    public function addTask(Task $task) : self
+    public function addTask(Task $task): self
     {
-        if(!$this->tasks->contains($task)) {
+        if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
         }
 

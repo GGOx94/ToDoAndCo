@@ -7,43 +7,40 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface         $em,
-        private readonly UserRepository                 $userRepository,
-        private readonly UserPasswordHasherInterface    $hasher
-    ) {}
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository,
+        private readonly UserPasswordHasherInterface $hasher
+    ) {
+    }
 
-    #[Route("/users", name: "user_list")]
-    public function listUsers() : Response
+    #[Route('/users', name: 'user_list')]
+    public function listUsers(): Response
     {
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
 
-    #[Route("/users/create", name: "user_create")]
-    public function createUser(Request $request) : Response
+    #[Route('/users/create', name: 'user_create')]
+    public function createUser(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->hasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            if($form["is_admin"]->getData() === true) {
-                $user->setRoles(["ROLE_ADMIN"]);
+            if (true === $form['is_admin']->getData()) {
+                $user->setRoles(['ROLE_ADMIN']);
             }
 
             $this->em->persist($user);
@@ -57,11 +54,11 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/users/{id}/edit", name:"user_edit")]
-    public function editUser(User $user, Request $request) : Response
+    #[Route('/users/{id}/edit', name: 'user_edit')]
+    public function editUser(User $user, Request $request): Response
     {
         $form = $this->createForm(UserType::class, $user, [
-            'is_admin_checked' => in_array('ROLE_ADMIN', $user->getRoles())
+            'is_admin_checked' => in_array('ROLE_ADMIN', $user->getRoles()),
         ]);
 
         $form->handleRequest($request);
@@ -70,8 +67,8 @@ class UserController extends AbstractController
             $password = $this->hasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            if($form["is_admin"]->getData() === true) {
-                $user->setRoles(["ROLE_ADMIN"]);
+            if (true === $form['is_admin']->getData()) {
+                $user->setRoles(['ROLE_ADMIN']);
             }
 
             $this->em->flush();
