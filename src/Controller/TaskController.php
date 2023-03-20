@@ -16,34 +16,34 @@ class TaskController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly TaskRepository $repository
-    ) {}
+    ) {
+    }
 
-    #[Route("/tasks", name: "task_list")]
-    public function listTasks() : Response
+    #[Route('/tasks', name: 'task_list')]
+    public function listTasks(): Response
     {
-        return $this->render("task/list.html.twig",[
-            'tasks' => $this->repository->findBy(["done" => false])
+        return $this->render('task/list.html.twig', [
+            'tasks' => $this->repository->findBy(['done' => false]),
         ]);
     }
 
-    #[Route("/tasks/done", name: "task_list_done")]
-    public function listTasksDone() : Response
+    #[Route('/tasks/done', name: 'task_list_done')]
+    public function listTasksDone(): Response
     {
-        return $this->render("task/list.html.twig",[
-            'tasks' => $this->repository->findBy(["done" => true])
+        return $this->render('task/list.html.twig', [
+            'tasks' => $this->repository->findBy(['done' => true]),
         ]);
     }
 
-    #[Route("/tasks/create", name: "task_create")]
-    public function createTask(Request $request) : Response
+    #[Route('/tasks/create', name: 'task_create')]
+    public function createTask(Request $request): Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $task->setCreatedAt(new \DateTimeImmutable());
             $task->toggle(false);
             $task->setUser($this->getUser());
@@ -59,8 +59,8 @@ class TaskController extends AbstractController
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route("/tasks/{id}/edit", name: "task_edit")]
-    public function editTask(Task $task, Request $request) : Response
+    #[Route('/tasks/{id}/edit', name: 'task_edit')]
+    public function editTask(Task $task, Request $request): Response
     {
         $form = $this->createForm(TaskType::class, $task);
 
@@ -80,22 +80,22 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route("/tasks/{id}/toggle", name: "task_toggle")]
-    public function toggleTask(Task $task) : Response
+    #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
+    public function toggleTask(Task $task): Response
     {
         $task->toggle(!$task->isDone());
         $this->em->flush();
 
         $this->addFlash('success',
             sprintf('La tâche %s a bien été marquée comme %s.',
-            $task->getTitle(), $task->isDone() ? "faite" : "non terminée")
+                $task->getTitle(), $task->isDone() ? 'faite' : 'non terminée')
         );
 
         return $this->redirectToRoute('task_list');
     }
 
-    #[Route("/tasks/{id}/delete", name: "task_delete")]
-    public function deleteTask(Task $task) : Response
+    #[Route('/tasks/{id}/delete', name: 'task_delete')]
+    public function deleteTask(Task $task): Response
     {
         $this->em->remove($task);
         $this->em->flush();

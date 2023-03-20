@@ -5,13 +5,12 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UserType extends AbstractType
@@ -22,10 +21,10 @@ class UserType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur",
                 'constraints' => [
-                    new Assert\NotBlank([ 'message' => 'Vous devez entrez un nom' ]),
+                    new Assert\NotBlank(['message' => 'Vous devez entrez un nom']),
                     new Assert\Length([
                         'min' => 3, 'minMessage' => 'Votre nom doit faire au moins {{ limit }} caractères.',
-                        'max' => 20, 'maxMessage' => 'Votre nom ne peut pas faire plus de {{ limit }} caractères.'
+                        'max' => 20, 'maxMessage' => 'Votre nom ne peut pas faire plus de {{ limit }} caractères.',
                     ]),
                 ],
             ])
@@ -34,20 +33,20 @@ class UserType extends AbstractType
 
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
                 'required' => true,
-                'first_options'  => ['always_empty' => false, 'label' => 'Mot de passe'],
+                'first_options' => ['always_empty' => false, 'label' => 'Mot de passe'],
                 'second_options' => ['always_empty' => false, 'label' => 'Tapez le mot de passe à nouveau'],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'constraints' => [
-                    new Assert\Email([ 'message' => "Le format de l'email n'est pas valide"])
-                ]
+                    new Assert\Email(['message' => "Le format de l'email n'est pas valide"]),
+                ],
             ])
             ->add('is_admin', CheckboxType::class, [
                 'data' => $options['is_admin_checked'],
                 'required' => false,
                 'mapped' => false,
-                'label' => "Définir comme administrateur"
+                'label' => 'Définir comme administrateur',
             ])
         ;
     }
@@ -56,7 +55,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_type' => User::class,
-            'is_admin_checked' => false
+            'is_admin_checked' => false,
         ]);
     }
 }

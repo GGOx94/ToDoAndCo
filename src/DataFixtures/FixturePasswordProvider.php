@@ -9,7 +9,8 @@ class FixturePasswordProvider
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $hasher
-    ) {}
+    ) {
+    }
 
     public function hashPassword(string $plainPassword): string
     {
