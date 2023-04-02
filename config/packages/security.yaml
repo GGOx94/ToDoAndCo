@@ -37,8 +37,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # Visitors can see all tasks (to be done in '/tasks' and done in '/tasks/done')
-        - { path: ^/tasks/done }
+        # Visitors can see tasks lists
+        - { path: ^/tasks/(done|todo), roles: PUBLIC_ACCESS }
         # Only users can create, edit or delete a task (last slash is important!)
         - { path: ^/tasks/, roles: ROLE_USER }
         # Only admin should have access to user list, user creation or user edition
