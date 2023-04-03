@@ -33,7 +33,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testListTasks(): void
     {
-        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_list'));
+        $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_list_todo'));
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
@@ -71,7 +71,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Check redirects on form submission and value of front-end flash message
-        $this->assertResponseRedirects($this->urlGenerator->generate("task_list"));
+        $this->assertResponseRedirects($this->urlGenerator->generate("task_list_todo"));
         $this->client->followRedirect();
         $this->assertSelectorTextContains('div.alert.alert-success','a bien été ajoutée.');
 
@@ -101,7 +101,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->submit($form);
 
         // Check redirects on form submission and value of front-end flash message
-        $this->assertResponseRedirects($this->urlGenerator->generate("task_list"));
+        $this->assertResponseRedirects($this->urlGenerator->generate("task_list_todo"));
         $this->client->followRedirect();
         $this->assertSelectorTextContains('div.alert.alert-success','a bien été modifiée.');
 
@@ -115,14 +115,14 @@ class TaskControllerTest extends WebTestCase
     {
         // Log user in, then load the task list page
         $this->client->loginUser($this->user);
-        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate("task_list"));
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate("task_list_todo"));
 
         // From that page, select the first task delete button, then send the form
         $form = $crawler->selectButton("Supprimer")->form();
         $this->client->submit($form);
 
         // Check for controller redirections and front-end flash message
-        $this->assertResponseRedirects($this->urlGenerator->generate("task_list"));
+        $this->assertResponseRedirects($this->urlGenerator->generate("task_list_todo"));
         $this->client->followRedirect();
         $this->assertSelectorTextContains('div.alert.alert-success','a bien été supprimée.');
 
