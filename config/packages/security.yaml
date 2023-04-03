@@ -39,9 +39,9 @@ security:
     access_control:
         # Visitors can see tasks lists
         - { path: ^/tasks/(done|todo), roles: PUBLIC_ACCESS }
-        # Only users can create, edit or delete a task (last slash is important!)
+        # Only users can create, edit or delete a task
         - { path: ^/tasks/, roles: ROLE_USER }
-        # Only admin should have access to user list, user creation or user edition
+        # Only admin can create, edit or delete a user
         - { path: ^/users, roles: ROLE_ADMIN }
 
 when@test:
