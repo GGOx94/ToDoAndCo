@@ -31,11 +31,7 @@ class Task
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $done;
 
-<<<<<<< Updated upstream
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
-=======
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER', inversedBy: 'tasks')]
->>>>>>> Stashed changes
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: false)]
     private User $user;
 
